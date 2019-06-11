@@ -1,0 +1,249 @@
+<template>
+    <div class="nav">
+        <!--通知栏，当切换页面时，动画消失，首页动态出现，所以使用vue的transition组件-->
+        <transition name="dialog-change">
+            <div class="dashboard" v-if="isDashBoardActive">
+                <DashDialog :options="DashDialogOptions"></DashDialog>
+            </div>
+        </transition>
+
+        <div class="menu">
+            <div class="container">
+                <div class="left">
+                    <div class="logo" style="width:100px; height: 48px;background-color: lightblue">LOGO</div>
+                    <div class="category-index-wrapper">
+                        <CategoryIndex></CategoryIndex>
+                    </div>
+
+                    <div class="top-search">
+                        <el-input
+                                size="medium"
+                                style="margin-top:6px;width: 400px; height: 40px;margin-left: 8px;border-radius: 40px 0 0 40px;"
+                                placeholder="请输入内容"
+                                suffix-icon="el-icon-search"
+                        ></el-input>
+                    </div>
+                </div>
+
+                <div class="right" id="app">
+                    <div class="before-login" v-if="isNotLogin">
+                        <el-button class="tag-style" type="text">成为讲师</el-button>
+                        <el-button class="tag-style" type="text">年费会员</el-button>
+                        <el-button class="tag-style" type="text" @click="loginDialog = true">登录</el-button>
+
+                        <!--dialog对话框：在保留当前页面状态的情况下，告知用户并承载相关操作。-->
+                        <el-dialog :visible.sync="loginDialog" width="30%"
+                                :before-close="handleClose" style="text-align: left;padding: 0px">
+                            <el-row :gutter="12">
+                                <el-col :span="12">
+                                    <img src="../../../assets/img/user/QR_code.png">
+                                    微信扫二维码登录
+                                </el-col>
+                                <el-col :span="12">
+                                    <img src="../../../assets/img/user/QR_code.png">
+                                    QQ扫二维码登录<span style="color: #28a745;" @click="loginDialog=false,isNotLogin=false">登陆成功</span>
+                                </el-col>
+                            </el-row>
+                            <span slot="footer" class="dialog-footer">
+                                <el-button @click="loginDialog = false">取 消</el-button>
+                                <el-button type="primary" @click="loginDialog = false">确 定</el-button>
+                            </span>
+                        </el-dialog>
+                    </div>
+
+                    <div class="after-login" v-else="isNotLogin">
+                        <el-dropdown style="margin-right: 20px">
+                            <span class="el-dropdown-link">
+                                 讲师<i class="el-icon-arrow-down el-icon--right"></i>
+                            </span>
+                            <el-dropdown-menu slot="dropdown" style="margin-right: 10px">
+                                <el-dropdown-item>查看我的授课</el-dropdown-item>
+                                <router-link to="/course/create" class="link-tag no-decoration">
+                                    <el-dropdown-item>创建课程</el-dropdown-item>
+                                </router-link>
+                            </el-dropdown-menu>
+                        </el-dropdown>
+
+                        <el-dropdown style="margin-right: 20px">
+                            <span class="el-dropdown-link">
+                                 我的课程<i class="el-icon-arrow-down el-icon--right"></i>
+                            </span>
+                            <el-dropdown-menu slot="dropdown" style="margin-right: 10px">
+                                <el-dropdown-item>已购课程</el-dropdown-item>
+                                <el-dropdown-item>班级课程</el-dropdown-item>
+                                <el-dropdown-item>收藏课程</el-dropdown-item>
+                            </el-dropdown-menu>
+                        </el-dropdown>
+
+                        <el-dropdown style="margin-right: 10px">
+                            <el-button type="primary" icon="el-icon-user-solid" circle style="border-radius: 40px;"></el-button>
+                            <el-dropdown-menu slot="dropdown">
+                                <router-link to="/userInfoCenter/userDetails" class="link-tag no-decoration">
+                                    <el-dropdown-item>个人信息</el-dropdown-item>
+                                </router-link>
+                                <router-link to="/userInfoCenter/userOrders" class="link-tag no-decoration">
+                                    <el-dropdown-item>我的订单</el-dropdown-item>
+                                </router-link>
+                                <router-link to="/userInfoCenter/studyRecord" class="link-tag no-decoration">
+                                    <el-dropdown-item>学习记录</el-dropdown-item>
+                                </router-link>
+                                <router-link to="/userInfoCenter/userCollect" class="link-tag no-decoration">
+                                    <el-dropdown-item>我的收藏</el-dropdown-item>
+                                </router-link>
+                                <!--原本就是跳转按钮，会阻止单纯的click事件，所以要加上native，使得点击事件有作用！！！-->
+                                <el-dropdown-item @click.native="isNotLogin = true">退出</el-dropdown-item>
+                            </el-dropdown-menu>
+                        </el-dropdown>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!--插槽，即首页的标签栏-->
+        <slot></slot>
+    </div>
+</template>
+
+<script lang="ts">
+    import {Component, Vue} from 'vue-property-decorator'
+    import {mapGetters} from 'vuex'
+    // import {OptionPanelInterface, OptionPanelItemInterface} from "../../common/OptionPanel/OptionPanel.Entity";
+    import {DashDialogOptionsInterface} from "../DashDialog/DashDialog.entity";
+
+    @Component({
+        name:'NavBar',
+        data(){
+          return{
+              isNotLogin:true,
+              loginDialog:false,
+              // DashDialogOptions: {
+              //     abstract: '新消息~~~新消息~~~新消息~~~新消息~~~新消息~~~新消息~~~新消息~~~新消息~~~新消息~~~新消息~~~新消息~~~新消息~~~新消息~~~新消息~~~新消息~~~新消息~~~新消息~~~新消息~~~新消息~~~新消息~~~新消息~~~新消息~~~新消息~~~',
+              //     content: ['typescript、vue等新教程来袭，不要错过！！', 'okok'],
+              // }
+          }
+        },
+        components:{
+            DashDialog:()=> import('@/components/home/DashDialog/DashDialog.vue'),
+            CategoryIndex: () => import('@/components/course/CategoryIndex/CategoryIndex.vue')
+        },
+
+        computed: {
+          ...mapGetters({
+              isDashBoardActive: 'dashboard/isDashBoardActive',
+          })
+        },
+
+
+        methods: {
+            handleClose(done) {
+                this.$confirm('确认关闭？')
+                    .then(_ => {
+                        done();
+                    })
+                    .catch(_ => {});
+            }
+        }
+    })
+    export default class NavBar extends Vue {
+        // public isDashBoardActive: boolean;
+
+        public DashDialogOptions: DashDialogOptionsInterface = {
+            abstract: 'Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum LoreLorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsumm ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum',
+            content: ['段落1', '段落2'],
+        }  // 总是报错，于是将这段写到data中去！！！，最后发现是script标签没有加lang=ts
+
+        constructor() {
+            super()
+        }
+
+        created() {
+            // console.log(isDashBoardActive)
+        }
+    }
+</script>
+
+<style scoped lang="scss">
+
+    @import "../../../assets/theme/theme";
+
+    .dashboard{
+        height: $navDashboardHeight;
+        opacity: 1;
+        overflow: hidden;
+        transition: height .5s, opcity .5s;
+        /*?????，何时传入的？？？*/
+        &.dialog-change-enter, &.dialog-change-leave-to{
+            height: 0;
+            opacity: 0;
+        }
+    }
+
+    .menu {
+        height: $navHeight;
+        background: white;
+        .container {
+            word-spacing: 0;
+            height: $navHeight;
+            .left {
+                display: inline-block;
+                width: 66%;
+                height: 100%;
+                vertical-align: top;
+                .logo {
+                    display: inline-block;
+                    vertical-align: top;
+                    /*why？？？ 如果没有vertical-align 样式整个乱套，问题与基线、vertical相关，好好看！！*/
+                }
+                .category-index-wrapper {
+                    display: inline-block;
+                }
+                .top-search {
+                    display: inline-block;
+                }
+            }
+            .right {
+                display: inline-block;
+                height: 100%;
+                line-height: $navHeight;
+                width: 33%;
+                text-align: right;
+                .tag {
+                    display: inline-block;
+                }
+            }
+        }
+    }
+
+    .after-login {
+        display: inline-block;
+    }
+
+    .link-tag {
+        /*text-decoration: none;*/
+        /*已经设置了 no-decoration */
+        color: black;
+    }
+
+    .el-dropdown-link {
+        cursor: pointer;
+        color: #409EFF;
+    }
+
+    .el-icon-arrow-down {
+        font-size: 12px;
+    }
+
+    .el-button {
+        border-radius: 0;
+    }
+
+    .an-select {
+        width: 100%;
+        height: 100%;
+    }
+
+    .tag-style {
+        margin-right: 10px;
+    }
+</style>

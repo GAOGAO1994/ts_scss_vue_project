@@ -1,0 +1,44 @@
+@import "theme";
+
+.skeleton {
+  color: transparent;
+  background-color: $skeletonColor;
+}
+
+.skeleton.fade {
+  animation: skeleton-fade 1.5s linear infinite;
+}
+
+@keyframes skeleton-fade {
+  50% {
+    background-color: rgba($skeletonColor, .7);
+  }
+}
+
+/****************
+*  transition    ???????  还是有些不明白
+****************/
+.skeleton-enter-active, .skeleton-leave-active {
+  transition: opacity .5s !important;
+}
+
+.skeleton-enter, .skeleton-leave-to {
+  opacity: 0 !important;  //  为什么是 0 ？？？
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

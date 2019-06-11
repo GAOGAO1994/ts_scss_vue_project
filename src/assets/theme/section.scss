@@ -1,0 +1,26 @@
+@import "./theme";
+
+/**************************
+    basic section style
+**************************/
+
+.container {
+  min-width: 80%;
+  max-width: 1200px;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.section-wrapper {
+  padding-top: 2.5%;
+  padding-bottom: 2.5%;
+}
+
+.section {
+  padding-bottom: 2.5%;
+  &:last-child {
+    padding-bottom: 0;
+  }
+}

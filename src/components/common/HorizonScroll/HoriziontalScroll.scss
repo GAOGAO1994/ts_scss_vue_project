@@ -1,0 +1,61 @@
+@import "../../../assets/theme/theme";
+
+$HorizonBackground: white;
+$cardHeight: 250px;
+$imageHeight: 120px;
+$textHeight: $cardHeight - $imageHeight;
+
+.list-wrapper {
+  overflow-x: hidden;
+  white-space: nowrap;
+  .card-list {
+    transition: transform .3s ease;
+    //display: flex; // 等会要换动态展示方式
+  }
+}
+
+.card-wrapper{
+  margin-left: 1px;
+  vertical-align: top;
+  //width: 20%;
+  .card {
+    margin-bottom: 1rem;
+    margin-right: 1rem;
+    height: $cardHeight;
+    background: $HorizonBackground;
+    img {
+      width: 100%;
+      height: $imageHeight;
+    }
+    .text {
+      padding: 1rem;
+      height: $textHeight;
+
+    }
+    .button-group {
+      text-align: right;
+    }
+  }
+  .popover-wrapper {
+    padding: 1rem;
+
+    // 为什么不起作用？？？？？
+    .text {
+      span {
+        display: block;
+        letter-spacing: 0;
+        overflow:hidden;
+        text-overflow:ellipsis;
+        white-space: normal;
+        display:-webkit-box;
+        -webkit-box-orient:vertical;
+        -webkit-line-clamp:2;/*规定最多显示两行*/
+
+      }
+    }
+  }
+
+
+
+}
+
